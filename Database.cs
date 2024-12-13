@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SQLite;
+using System.Data.Entity.Core.Metadata.Edm;
+using System.Runtime.CompilerServices;
 
 namespace ExpenseTracker
 {
@@ -12,6 +14,10 @@ namespace ExpenseTracker
         public string dbpath { get; set; }
         private SQLiteConnection connection { get; set; }
 
+        // Documentation: Database constructor
+        // this sets the database file path (file.db)
+        // this opens a connection to the database
+        // should be called like this: Database db = new Database("path of database file");
         public Database(string path)
         {
             this.dbpath = path;
@@ -21,6 +27,11 @@ namespace ExpenseTracker
             this.connection.Open();
         }
 
+        // Documentation: this method will check if there is already a table
+        // it will create something like this
+        // +--------------------------------------+
+        // |id  | category | type | amount | date |
+        // +--------------------------------------+
         public void CreateTable()
         {
             string query = @"
@@ -39,6 +50,20 @@ namespace ExpenseTracker
             }
         }
 
+        // Documentation: this is for inserting our data
+        // liek this
+        // +--------------------------------------+
+        // |id  | category | type | amount | date |
+        // +--------------------------------------+
+        // |           Currently empty            |
+        // +--------------------------------------+
+
+        // if we call InsertData(data)
+        // +---------------------------------------------+
+        // |id  | category | type  | amount | date       |
+        // +---------------------------------------------+
+        // |1   | food     |grocery| 500    | 10/10/2024 |
+        // +---------------------------------------------+
         public void InsertData(ExpenseData data)
         {
             string query = "INSERT INTO ExpenseData (category, type, amount, date) VALUES (@category, @type, @amount, @date)";
@@ -53,6 +78,22 @@ namespace ExpenseTracker
             }
         }
 
+        // Documentation: this retrieves data based on a range of start - end date
+        // Documentation: this is for inserting our data
+        // +---------------------------------------------+
+        // |id  | category | type  | amount | date       |
+        // +---------------------------------------------+
+        // |1   | food     |grocery| 500    | 10/10/2024 |
+        // +---------------------------------------------+
+        // |2   | movie    |idk    | 300    | 11/10/2024 |
+        // +---------------------------------------------+
+        // |3   | food     |online | 500    | 12/10/2024 |
+        // +---------------------------------------------+
+        // if we call QueryDataDateRange("10/10/2024", "11/10/2024")
+        // this will return an ArrayList of data
+        // retrieved data: 
+        // { "food,grocery,500,10/10/2024" } && { "movie,idk,300,11/10/2024" }
+        // notice the 3rd one is not included because it is out of range
         public List<ExpenseData> QueryDataDateRange(long startUnix, long endUnix)
         {
             List<ExpenseData> row = new List<ExpenseData>();
@@ -106,6 +147,9 @@ namespace ExpenseTracker
 
     }
 
+    // Documentation: structure of Data so that we can easily use it in functions without passing multiple data
+    // if we pass like this: InsertData("category", "type", amount, date) its very time consuming
+    // but we use this structure it will be easier InsertData(data);
     public struct ExpenseData
     {
         public string category { get; set; }

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
+// Documentation: this is just a helper functions for converting unix to mm/dd/yy string format and vice versa
 namespace ExpenseTracker
 {
     public class Utils

@@ -12,13 +12,13 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 
 
 // TODO:
-//  - separate the code logic (high)
-//  - implement pagination (high)
-//  - implement search (medium)
-//  - implement charts (low)
-//  - implement profiles (very low)
-//  - implement date search (high)
-//  - implement sorting (high)
+//  - separate the code logic (high) [x]
+//  - implement pagination (high)    [*]
+//  - implement search (medium)      [x]
+//  - implement charts (low)         [x]
+//  - implement profiles (very low)  [x]
+//  - implement date search (high)   
+//  - implement sorting (high)       [*]
 namespace ExpenseTracker
 {
     public partial class Form1 : Form
@@ -33,10 +33,6 @@ namespace ExpenseTracker
         long startTime;
         long endTime;
 
-        int relNum1 = 1;
-        int relNum2 = 2;
-        int relNum3 = 3;
-        int relNum4 = 4;
         int currentTotalPage;
 
         private int previousSelectedIndex = 2;
@@ -120,13 +116,6 @@ namespace ExpenseTracker
             long currentTime = Utils.UnixCurrentTime();
             start_date_input.Text = Utils.UnixTimeToDateTimeString(currentTime);
             end_date_input.Text = Utils.UnixTimeToDateTimeString(currentTime);
-        }
-
-        public void DrawPaginationButton()
-        {
-
-
-
         }
         
         // Previous button
@@ -293,6 +282,22 @@ namespace ExpenseTracker
             }
         }
 
+        // DOCUMENTATION:
+        // 1) SortByCategory() - sorts by using lexicographical order
+        // Example: sort the ff. string [ "file10.txt", "file1.txt", "File02.txt", "Listen", List" ] direction -->
+        // lexical order is [ file1.txt, file10.txt, file2.txt, "List", "Listen" ] direction -->
+        // note
+        // additional info: https://en.wikipedia.org/wiki/Lexicographic_order
+        // 
+        // 2) SortByType() - same as SortByCategory
+        // 3) SortByDate() - uses Unix Time as a method of storage
+        // Unix time is the Seconds since Jan 01 1970. (UTC) 
+        // example: 1734053948 = Fri Dec 13 2024 01:39:08 GMT+0000
+        //          1734054003 = Fri Dec 13 2024 01:40:03 GMT+0000
+        // pros: easier to sort
+        // cons: painful to write
+        // additional info: https://en.wikipedia.org/wiki/Unix_time
+        // 4) SortByAmount() - sorts by highest - lowest amount
         private void SortByCategory()
         {
             // Use LINQ to order by category (alphabetically) TODO: research if alphabvetical is same as lexicographical sorting
@@ -315,6 +320,14 @@ namespace ExpenseTracker
             DrawPagination(currentPage);
         }
 
+        // DOCUMENTATION:
+        // The main goal of this method is to have a unified styler for the UI components
+        // It uses Hexadecimal codes then translate it into Color Object;
+        // Example: #FFFFFF (White color)
+        //  - this is divided into 3 parts (FF, FF, FF) Red Green Blue
+        //  - if we convert that to integer that would be 255, 255, 255 respectively
+        // try it: https://www.google.com/search?q=color+picker
+        
         private void ApplyTheme(Theme theme)
         {
             // Modify theme for sidepanel components

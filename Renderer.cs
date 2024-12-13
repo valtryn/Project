@@ -9,7 +9,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 
 namespace ExpenseTracker
 {
-    // TODO(russel): simplify the color/use direct name and avoid converting to hex
+
     public struct Theme
     {
         public Color crust      { get; set; }
@@ -18,6 +18,8 @@ namespace ExpenseTracker
         public Color green      { get; set; }
         //public string red { get; set; }
         
+        // Documentation: for theming only
+        // converts hexadecimals to appropriate data type that is accepted by the c# Winform
         public Theme(string crust, string mantle, string foreground, string green)
         {
             this.crust      = HexToColor(crust);
@@ -30,6 +32,20 @@ namespace ExpenseTracker
             return ColorTranslator.FromHtml(hex);
         }
     }
+
+    // Documentation: this class draws various important components to make our programming more appealing
+    // Renderer() is the constructor
+    // RenderWindow()
+    // - draws the actual window
+    // - sets the size, border style, disables Maximize, sets the background color, sets the title and icon of the window
+    // RenderShadowSidePanel()
+    // - draws the shadow/box in the add data panel 
+    // RenderShadowSidePanel()
+    // - draws the shadow/box in the add panel 
+    // RenderShadowDateRange()
+    // - draws the shadow/box in the setting for date range panel 
+    // RenderShadowDataTable()
+    // - draws the lines you see in the table
     public class Renderer
     {
         private Theme theme;
