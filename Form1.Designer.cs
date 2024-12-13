@@ -100,6 +100,9 @@
             this.page_number = new System.Windows.Forms.Button();
             this.next_button = new System.Windows.Forms.Button();
             this.filter_date = new System.Windows.Forms.Button();
+            this.reset_button = new System.Windows.Forms.Button();
+            this.theme_combo_box = new System.Windows.Forms.ComboBox();
+            this.theme_label = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // category_input
@@ -187,9 +190,9 @@
             // add_button
             // 
             this.add_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.add_button.Location = new System.Drawing.Point(294, 422);
+            this.add_button.Location = new System.Drawing.Point(36, 422);
             this.add_button.Name = "add_button";
-            this.add_button.Size = new System.Drawing.Size(91, 35);
+            this.add_button.Size = new System.Drawing.Size(349, 37);
             this.add_button.TabIndex = 10;
             this.add_button.Text = "ADD";
             this.add_button.UseVisualStyleBackColor = true;
@@ -198,9 +201,9 @@
             // import_button
             // 
             this.import_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.import_button.Location = new System.Drawing.Point(35, 590);
+            this.import_button.Location = new System.Drawing.Point(36, 465);
             this.import_button.Name = "import_button";
-            this.import_button.Size = new System.Drawing.Size(157, 38);
+            this.import_button.Size = new System.Drawing.Size(170, 38);
             this.import_button.TabIndex = 11;
             this.import_button.Text = "Import";
             this.import_button.UseVisualStyleBackColor = true;
@@ -209,12 +212,13 @@
             // export_button
             // 
             this.export_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.export_button.Location = new System.Drawing.Point(228, 590);
+            this.export_button.Location = new System.Drawing.Point(212, 464);
             this.export_button.Name = "export_button";
-            this.export_button.Size = new System.Drawing.Size(157, 38);
+            this.export_button.Size = new System.Drawing.Size(173, 38);
             this.export_button.TabIndex = 12;
             this.export_button.Text = "Export";
             this.export_button.UseVisualStyleBackColor = true;
+            this.export_button.Click += new System.EventHandler(this.export_button_Click);
             // 
             // separator
             // 
@@ -799,7 +803,7 @@
             // previous_button
             // 
             this.previous_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.previous_button.Location = new System.Drawing.Point(739, 626);
+            this.previous_button.Location = new System.Drawing.Point(841, 626);
             this.previous_button.Name = "previous_button";
             this.previous_button.Size = new System.Drawing.Size(27, 29);
             this.previous_button.TabIndex = 94;
@@ -811,7 +815,7 @@
             // page_number
             // 
             this.page_number.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.page_number.Location = new System.Drawing.Point(771, 630);
+            this.page_number.Location = new System.Drawing.Point(874, 630);
             this.page_number.Name = "page_number";
             this.page_number.Size = new System.Drawing.Size(66, 29);
             this.page_number.TabIndex = 95;
@@ -821,7 +825,7 @@
             // next_button
             // 
             this.next_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.next_button.Location = new System.Drawing.Point(841, 626);
+            this.next_button.Location = new System.Drawing.Point(947, 626);
             this.next_button.Name = "next_button";
             this.next_button.Size = new System.Drawing.Size(28, 29);
             this.next_button.TabIndex = 99;
@@ -841,11 +845,46 @@
             this.filter_date.UseVisualStyleBackColor = true;
             this.filter_date.Click += new System.EventHandler(this.filter_date_Click);
             // 
+            // reset_button
+            // 
+            this.reset_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.reset_button.Location = new System.Drawing.Point(36, 623);
+            this.reset_button.Name = "reset_button";
+            this.reset_button.Size = new System.Drawing.Size(350, 38);
+            this.reset_button.TabIndex = 102;
+            this.reset_button.Text = "Reset";
+            this.reset_button.UseVisualStyleBackColor = true;
+            this.reset_button.Click += new System.EventHandler(this.reset_button_Click);
+            // 
+            // theme_combo_box
+            // 
+            this.theme_combo_box.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.theme_combo_box.FormattingEnabled = true;
+            this.theme_combo_box.Location = new System.Drawing.Point(164, 510);
+            this.theme_combo_box.Name = "theme_combo_box";
+            this.theme_combo_box.Size = new System.Drawing.Size(222, 33);
+            this.theme_combo_box.TabIndex = 104;
+            this.theme_combo_box.SelectedIndexChanged += new System.EventHandler(this.theme_combo_box_SelectedIndexChanged);
+            // 
+            // theme_label
+            // 
+            this.theme_label.AutoSize = true;
+            this.theme_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.theme_label.Location = new System.Drawing.Point(39, 514);
+            this.theme_label.Name = "theme_label";
+            this.theme_label.Size = new System.Drawing.Size(115, 25);
+            this.theme_label.TabIndex = 105;
+            this.theme_label.Text = "Set theme:";
+            this.theme_label.Click += new System.EventHandler(this.label1_Click_6);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1264, 681);
+            this.Controls.Add(this.theme_label);
+            this.Controls.Add(this.theme_combo_box);
+            this.Controls.Add(this.reset_button);
             this.Controls.Add(this.filter_date);
             this.Controls.Add(this.next_button);
             this.Controls.Add(this.page_number);
@@ -999,6 +1038,9 @@
         private System.Windows.Forms.Button page_number;
         private System.Windows.Forms.Button next_button;
         private System.Windows.Forms.Button filter_date;
+        private System.Windows.Forms.Button reset_button;
+        private System.Windows.Forms.ComboBox theme_combo_box;
+        private System.Windows.Forms.Label theme_label;
     }
 }
 

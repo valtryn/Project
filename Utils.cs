@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Windows.Forms;
 
 
 // Documentation: this is just a helper functions for converting unix to mm/dd/yy string format and vice versa
@@ -43,6 +45,40 @@ namespace ExpenseTracker
             }
 
             return ((DateTimeOffset)parsedDate).ToUnixTimeSeconds(); ;
+        }
+
+        public static List<ExpenseData> ReadCsvFile(string filePath)
+        {
+            List<ExpenseData> expenses = new List<ExpenseData>();
+
+            try
+            {
+                // Read all lines from the CSV file
+                string[] lines = File.ReadAllLines(filePath);
+
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    string[] fields = lines[i].Split(',');
+
+                    if (fields.Length == 4)
+                    {
+                        string category = fields[0].Trim();
+                        string type = fields[1].Trim();
+                        string unixTime = fields[2].Trim();
+                        double amount = double.Parse(fields[3].Trim());
+
+
+                        // Add to list
+                        expenses.Add(new ExpenseData(category, type, amount, StringTimeToUnixTime(unixTime)));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error inserting data: {ex.Message}", "Import Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return expenses;
         }
     }
 }

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using System.Data.SQLite;
 using System.Data.Entity.Core.Metadata.Edm;
 using System.Runtime.CompilerServices;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+using System.IO;
+
 
 namespace ExpenseTracker
 {
@@ -134,9 +137,7 @@ namespace ExpenseTracker
                         {
                             amount = Convert.ToDouble(reader["amount"]);
                         }
-
                         long dateUnixTime = Convert.ToInt64(reader["date"]);
-                        Console.WriteLine("added");
 
                         row.Add(new ExpenseData(category, type, amount, dateUnixTime));
                     }
@@ -144,12 +145,64 @@ namespace ExpenseTracker
             }
             return row;
         }
+        public void DropTable()
+        {
+            string query = "DELETE FROM ExpenseData";
+            using (var command = new SQLiteCommand(query, connection))
+            {
+                command.ExecuteNonQuery();
+            }
+        }
 
+        public void Import(string path, Database db)
+        {
+            List<ExpenseData> rows = Utils.ReadCsvFile(path);
+            // Display the data (just for checking)
+            foreach (var row in rows)
+            {
+                db.InsertData(row);
+            }
+        }
+
+        public void Export(string path, Database db)
+        {
+            List<ExpenseData> rows = new List<ExpenseData>();
+            string query = "SELECT * FROM ExpenseData";
+            using (var command = new SQLiteCommand(query, connection))
+            {
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        string category = reader["category"].ToString();
+                        string type = reader["type"].ToString();
+                        double amount = 0;
+
+                        if (reader["amount"] != DBNull.Value)
+                        {
+                            amount = Convert.ToDouble(reader["amount"]);
+                        }
+                        long dateUnixTime = Convert.ToInt64(reader["date"]);
+
+                        rows.Add(new ExpenseData(category, type, amount, dateUnixTime));
+                    }
+                }
+            }
+            using (StreamWriter writer = new StreamWriter(path))
+            {
+             foreach (var row in rows)
+            {
+                 // Convert each ExpenseData object to a CSV string and write to file
+                writer.WriteLine($"{row.category},{row.type},{Utils.UnixTimeToDateTimeString(row.unixTime)},{row.amount}");
+            }
+        }
     }
+}
+
 
     // Documentation: structure of Data so that we can easily use it in functions without passing multiple data
     // if we pass like this: InsertData("category", "type", amount, date) its very time consuming
-    // but we use this structure it will be easier InsertData(data);
+    // but if we use this structure it will be easier InsertData(data);
     public struct ExpenseData
     {
         public string category { get; set; }

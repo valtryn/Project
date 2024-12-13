@@ -16,16 +16,18 @@ namespace ExpenseTracker
         public Color mantle     { get; set; }
         public Color foreground { get; set; }
         public Color green      { get; set; }
-        //public string red { get; set; }
+        public Color red        { get; set; }
         
         // Documentation: for theming only
         // converts hexadecimals to appropriate data type that is accepted by the c# Winform
-        public Theme(string crust, string mantle, string foreground, string green)
+        public Theme(string crust, string mantle, string foreground, string green, string red)
         {
             this.crust      = HexToColor(crust);
             this.mantle     = HexToColor(mantle);
             this.foreground = HexToColor(foreground);
             this.green      = HexToColor(green);
+            this.red        = HexToColor(red);
+
         }
         public static Color HexToColor(string hex)
         {

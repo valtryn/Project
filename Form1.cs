@@ -36,6 +36,7 @@ namespace ExpenseTracker
         int currentTotalPage;
 
         private int previousSelectedIndex = 2;
+        private int previousSelectedTheme = 0;
 
         public Form1()
         {
@@ -73,13 +74,14 @@ namespace ExpenseTracker
                 "#0C0B0B", // crust
                 "#232222", // mantle
                 "#FFFFFF", // foreground/text
-                "#6DFF65"  // green
+                "#6DFF65", // green
+                "#CC0000"  // red
                 );
 
             renderer = new Renderer(this, theme);
             renderer.RenderWindow();
             ApplyTheme(theme);
-
+            DrawTheme();
             // TODO: render this component in renderer class
             date_picker.Format = DateTimePickerFormat.Custom;
             date_picker.ShowUpDown = false;
@@ -110,6 +112,86 @@ namespace ExpenseTracker
             sort_combo_box.SelectedIndex = 2;
             sort_combo_box.DropDownStyle = ComboBoxStyle.DropDownList;
         }
+
+        public void DrawTheme()
+        {
+            theme_combo_box.Items.Add("Default");
+            theme_combo_box.Items.Add("Catppuccin");
+            theme_combo_box.Items.Add("Gruvbox");
+            theme_combo_box.Items.Add("Rosepine");
+            theme_combo_box.SelectedIndex = 0;
+            theme_combo_box.DropDownStyle = ComboBoxStyle.DropDownList;
+        }
+        private void theme_combo_box_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (theme_combo_box.SelectedIndex != previousSelectedTheme)
+            {
+                previousSelectedTheme = theme_combo_box.SelectedIndex;
+
+                switch (theme_combo_box.SelectedIndex)
+                {
+                    case 0:
+                        Theme def = new Theme(
+                            "#0C0B0B", // crust
+                            "#232222", // mantle
+                            "#FFFFFF", // foreground/text
+                            "#6DFF65", // green
+                            "#CC0000"  // red
+                        );
+                        ApplyTheme(def);
+                        renderer = new Renderer(this, def);
+                        renderer.RenderWindow();
+                        LoadData(Utils.UnixCurrentTime(), Utils.UnixCurrentTime());
+                        DrawPagination(currentPage);
+                        break;
+                    case 1:
+                        Theme catppuccin = new Theme(
+                            "#11111b", // crust
+                            "#1e1e2e", // mantle
+                            "#cdd6f4", // foreground/text
+                            "#a6e3a1", // green
+                            "#f38ba8"  // red
+                        );
+                        ApplyTheme(catppuccin);
+                        renderer = new Renderer(this, catppuccin);
+                        renderer.RenderWindow();
+                        LoadData(Utils.UnixCurrentTime(), Utils.UnixCurrentTime());
+                        DrawPagination(currentPage);
+                        break;
+                    case 2:
+                        Theme gruvbox = new Theme(
+                            "#282828", // crust
+                            "#1d2021", // mantle
+                            "#ebdbb2", // foreground/text
+                            "#98971a", // green
+                            "#cc241d"  // red
+                        );
+                        ApplyTheme(gruvbox);
+                        renderer = new Renderer(this, gruvbox);
+                        renderer.RenderWindow();
+                        LoadData(Utils.UnixCurrentTime(), Utils.UnixCurrentTime());
+                        DrawPagination(currentPage);
+                        break;
+
+                    case 3:
+                        Theme embark = new Theme(
+                            "#100E23", // crust
+                            "#1E1C31", // mantle
+                            "#CBE3E7", // foreground/text
+                            "#7FE9C3", // green
+                            "#F02E6E"  // red
+                        );
+                        ApplyTheme(embark);
+                        renderer = new Renderer(this, embark);
+                        renderer.RenderWindow();
+                        LoadData(Utils.UnixCurrentTime(), Utils.UnixCurrentTime());
+                        DrawPagination(currentPage);
+                        break;
+
+                }
+            }
+        }
+
 
         public void DrawDatePickerRange()
         {
@@ -179,6 +261,42 @@ namespace ExpenseTracker
             renderer.RenderShadowDataTable(e);
         }
 
+        // event handler for import button
+        private void button2_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "CSV Files (*.csv)|*.csv|All Files (*.*)|*.*";
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                string filePath = openFileDialog.FileName;
+                MessageBox.Show("File selected: " + filePath, "File Selected", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                database.Import(filePath, this.database);
+                LoadData(Utils.UnixCurrentTime(), Utils.UnixCurrentTime());
+                DrawPagination(currentPage);
+            }
+            else
+            {
+                MessageBox.Show("No file selected.", "No File", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        // event handler for export
+        private void export_button_Click(object sender, EventArgs e)
+        {
+            // Create a SaveFileDialog to let the user choose a location and filename
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.Filter = "CSV Files (*.csv)|*.csv|All Files (*.*)|*.*";
+                saveFileDialog.DefaultExt = "csv";
+                saveFileDialog.FileName = "export.csv";
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string filePath = saveFileDialog.FileName;
+                    database.Export(filePath, database);
+                }
+            }
+        }
         private void add_Click(object sender, EventArgs e)
         {
             string category_entry = category_input.Text;
@@ -194,7 +312,7 @@ namespace ExpenseTracker
             double amount;
             if (string.IsNullOrWhiteSpace(amount_entry) || !double.TryParse(amount_entry, out amount) || amount <= 0)
             {
-                MessageBox.Show("Amount must be a valid number greater than zero.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Amount must be a valid number that is greater than zero.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -327,7 +445,30 @@ namespace ExpenseTracker
         //  - this is divided into 3 parts (FF, FF, FF) Red Green Blue
         //  - if we convert that to integer that would be 255, 255, 255 respectively
         // try it: https://www.google.com/search?q=color+picker
-        
+
+        private void reset_button_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show(
+                                    "Are you sure you want to delete you current data?",
+                                    "Confirmation",
+                                    MessageBoxButtons.YesNo,    
+                                    MessageBoxIcon.Question 
+);
+
+            // Check which button was clicked
+            if (result == DialogResult.Yes)
+            {
+                // Code to execute if "Yes" is clicked
+                database.DropTable();
+                LoadData(Utils.UnixCurrentTime(), Utils.UnixCurrentTime());
+                DrawPagination(currentPage);
+
+            }
+            else if (result == DialogResult.No)
+            {
+
+            }
+        }
         private void ApplyTheme(Theme theme)
         {
             // Modify theme for sidepanel components
@@ -358,6 +499,17 @@ namespace ExpenseTracker
             import_button.ForeColor = theme.foreground;
             export_button.BackColor = theme.mantle;
             export_button.ForeColor = theme.foreground;
+
+            theme_label.BackColor = theme.mantle;
+            theme_label.ForeColor = theme.foreground;
+
+            theme_combo_box.BackColor = theme.mantle;
+            theme_combo_box.ForeColor = theme.foreground;
+
+            reset_button.BackColor = theme.mantle;
+            reset_button.ForeColor = theme.red;
+            reset_button.FlatStyle = FlatStyle.Flat;
+            reset_button.FlatAppearance.BorderSize = 1;
 
             // Modify theme for date-range panel components
             // month.BackColor     = theme.mantle;
@@ -475,10 +627,7 @@ namespace ExpenseTracker
 
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
 
-        }
 
         private void label2_Click(object sender, EventArgs e)
         {
@@ -557,6 +706,11 @@ namespace ExpenseTracker
 
 
         private void label1_Click_5(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click_6(object sender, EventArgs e)
         {
 
         }
