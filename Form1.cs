@@ -37,6 +37,7 @@ namespace ExpenseTracker
 
         private int previousSelectedIndex = 2;
         private int previousSelectedTheme = 0;
+        bool searchMode = false;
 
         public Form1()
         {
@@ -124,6 +125,7 @@ namespace ExpenseTracker
         }
         private void theme_combo_box_SelectedIndexChanged(object sender, EventArgs e)
         {
+            searchMode = false;
             if (theme_combo_box.SelectedIndex != previousSelectedTheme)
             {
                 previousSelectedTheme = theme_combo_box.SelectedIndex;
@@ -247,7 +249,11 @@ namespace ExpenseTracker
             }
 
             total_amount_holder.Text = CalculateTotalAmount().ToString("F2");
-            transaction_amount_holder.Text = CalculateTotalTransaction().ToString();
+            if (!searchMode)
+            {
+                transaction_amount_holder.Text = CalculateTotalTransaction().ToString();
+            }
+            
             page_number.Text = currentPage.ToString();
             this.Invalidate();
             this.Refresh();
@@ -264,6 +270,7 @@ namespace ExpenseTracker
         // event handler for import button
         private void button2_Click(object sender, EventArgs e)
         {
+            searchMode = false;
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "CSV Files (*.csv)|*.csv|All Files (*.*)|*.*";
             if (openFileDialog.ShowDialog() == DialogResult.OK)
@@ -283,6 +290,7 @@ namespace ExpenseTracker
         // event handler for export
         private void export_button_Click(object sender, EventArgs e)
         {
+            searchMode = false;
             // Create a SaveFileDialog to let the user choose a location and filename
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {
@@ -299,6 +307,7 @@ namespace ExpenseTracker
         }
         private void add_Click(object sender, EventArgs e)
         {
+            searchMode = false;
             string category_entry = category_input.Text;
             string type_entry = type_input.Text;
             string amount_entry = amount_input.Text;
@@ -361,7 +370,12 @@ namespace ExpenseTracker
 
         private void filter_date_Click(object sender, EventArgs e)
         {
+            searchMode = false;
             // TODO: need validation
+            if (!Utils.ValidateDate(start_date_input.Text) || !Utils.ValidateDate(end_date_input.Text)) {
+                MessageBox.Show("Invalid range date entry.", "Invalid Date Entry", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             startTime = Utils.StringTimeToUnixTime(start_date_input.Text);
             endTime = Utils.StringTimeToUnixTime(end_date_input.Text);
 
@@ -371,6 +385,7 @@ namespace ExpenseTracker
 
         private void sort_combo_box_SelectedIndexChanged(object sender, EventArgs e)
         {
+            searchMode = false;
             if (sort_combo_box.SelectedIndex != previousSelectedIndex)
             {
                 previousSelectedIndex = sort_combo_box.SelectedIndex;
@@ -469,6 +484,16 @@ namespace ExpenseTracker
 
             }
         }
+
+        private void search_button_Click(object sender, EventArgs e)
+        {
+            searchMode = true;
+            string query = search_box.Text;
+            data = database.Search(query);
+            DrawPagination(currentPage);
+            transaction_amount_holder.Text = data.Count.ToString();
+
+        }
         private void ApplyTheme(Theme theme)
         {
             // Modify theme for sidepanel components
@@ -526,8 +551,8 @@ namespace ExpenseTracker
             // year.ForeColor      = theme.foreground;
 
             // Modify theme for search and sort components
-            search_label.BackColor = theme.crust;
-            search_label.ForeColor = theme.foreground;
+            search_button.BackColor = theme.crust;
+            search_button.ForeColor = theme.foreground;
             search_box.BackColor = theme.crust;
             search_box.ForeColor = theme.foreground;
 

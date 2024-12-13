@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Forms;
+using System.Text.RegularExpressions;
 
 
 // Documentation: this is just a helper functions for converting unix to mm/dd/yy string format and vice versa
@@ -79,6 +80,42 @@ namespace ExpenseTracker
             }
 
             return expenses;
+        }
+        public static bool ValidateDate(string date)
+        {
+            // Check if the date has exactly 10 characters
+            if (date.Length != 10)
+            {
+                return false;
+            }
+
+            Regex regex = new Regex(@"^\d{2}/\d{2}/\d{4}$");
+            if (!regex.IsMatch(date))
+            {
+                return false;
+            }
+
+            string[] dateParts = date.Split('/');
+            int month = int.Parse(dateParts[0]);
+            int day = int.Parse(dateParts[1]);
+            int year = int.Parse(dateParts[2]);
+
+            if (month < 1 || month > 12)
+            {
+                return false;
+            }
+            if (day < 1 || day > 31)
+            {
+                return false;
+            }
+
+            if (year < 1000 || year > 9999)
+            {
+                return false;
+            }
+
+            return true;
+
         }
     }
 }

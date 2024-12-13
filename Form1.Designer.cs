@@ -40,7 +40,6 @@
             this.import_button = new System.Windows.Forms.Button();
             this.export_button = new System.Windows.Forms.Button();
             this.separator = new System.Windows.Forms.Label();
-            this.search_label = new System.Windows.Forms.Label();
             this.sort_label = new System.Windows.Forms.Label();
             this.search_box = new System.Windows.Forms.TextBox();
             this.category_column = new System.Windows.Forms.Label();
@@ -103,6 +102,7 @@
             this.reset_button = new System.Windows.Forms.Button();
             this.theme_combo_box = new System.Windows.Forms.ComboBox();
             this.theme_label = new System.Windows.Forms.Label();
+            this.search_button = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // category_input
@@ -231,17 +231,6 @@
             this.separator.Text = "-";
             this.separator.Click += new System.EventHandler(this.label2_Click_1);
             // 
-            // search_label
-            // 
-            this.search_label.AutoSize = true;
-            this.search_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.search_label.Location = new System.Drawing.Point(423, 109);
-            this.search_label.Name = "search_label";
-            this.search_label.Size = new System.Drawing.Size(86, 25);
-            this.search_label.TabIndex = 17;
-            this.search_label.Text = "Search:";
-            this.search_label.Click += new System.EventHandler(this.label1_Click_2);
-            // 
             // sort_label
             // 
             this.sort_label.AutoSize = true;
@@ -257,7 +246,7 @@
             // 
             this.search_box.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.search_box.ForeColor = System.Drawing.Color.White;
-            this.search_box.Location = new System.Drawing.Point(515, 106);
+            this.search_box.Location = new System.Drawing.Point(512, 106);
             this.search_box.Name = "search_box";
             this.search_box.Size = new System.Drawing.Size(225, 31);
             this.search_box.TabIndex = 19;
@@ -877,11 +866,24 @@
             this.theme_label.Text = "Set theme:";
             this.theme_label.Click += new System.EventHandler(this.label1_Click_6);
             // 
+            // search_button
+            // 
+            this.search_button.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.search_button.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.search_button.Location = new System.Drawing.Point(428, 106);
+            this.search_button.Name = "search_button";
+            this.search_button.Size = new System.Drawing.Size(81, 31);
+            this.search_button.TabIndex = 106;
+            this.search_button.Text = "Search";
+            this.search_button.UseVisualStyleBackColor = true;
+            this.search_button.Click += new System.EventHandler(this.search_button_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1264, 681);
+            this.Controls.Add(this.search_button);
             this.Controls.Add(this.theme_label);
             this.Controls.Add(this.theme_combo_box);
             this.Controls.Add(this.reset_button);
@@ -944,7 +946,6 @@
             this.Controls.Add(this.category_column);
             this.Controls.Add(this.search_box);
             this.Controls.Add(this.sort_label);
-            this.Controls.Add(this.search_label);
             this.Controls.Add(this.separator);
             this.Controls.Add(this.export_button);
             this.Controls.Add(this.import_button);
@@ -978,7 +979,6 @@
         private System.Windows.Forms.Button import_button;
         private System.Windows.Forms.Button export_button;
         private System.Windows.Forms.Label separator;
-        private System.Windows.Forms.Label search_label;
         private System.Windows.Forms.Label sort_label;
         private System.Windows.Forms.TextBox search_box;
         private System.Windows.Forms.Label category_column;
@@ -1041,6 +1041,7 @@
         private System.Windows.Forms.Button reset_button;
         private System.Windows.Forms.ComboBox theme_combo_box;
         private System.Windows.Forms.Label theme_label;
+        private System.Windows.Forms.Button search_button;
     }
 }
 

@@ -190,14 +190,47 @@ namespace ExpenseTracker
             }
             using (StreamWriter writer = new StreamWriter(path))
             {
-             foreach (var row in rows)
-            {
-                 // Convert each ExpenseData object to a CSV string and write to file
-                writer.WriteLine($"{row.category},{row.type},{Utils.UnixTimeToDateTimeString(row.unixTime)},{row.amount}");
+                foreach (var row in rows)
+                {
+                     // Convert each ExpenseData object to a CSV string and write to file
+                    writer.WriteLine($"{row.category},{row.type},{Utils.UnixTimeToDateTimeString(row.unixTime)},{row.amount}");
+                }
             }
+
+
+        }
+
+        public List<ExpenseData> Search(string query)
+        {
+            List<ExpenseData> rows = new List<ExpenseData>();
+            string search_q = "SELECT * FROM ExpenseData";
+            using (var command = new SQLiteCommand(search_q, connection))
+            {
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        string category = reader["category"].ToString();
+                        string type = reader["type"].ToString();
+                        double amount = 0;
+                        if (reader["amount"] != DBNull.Value)
+                        {
+                            amount = Convert.ToDouble(reader["amount"]);
+                        }
+                        long dateUnixTime = Convert.ToInt64(reader["date"]);
+                        if (category.ToLower() == query.ToLower() || type.ToLower() == query.ToLower())
+                        {
+                            rows.Add(new ExpenseData(category, type, amount, dateUnixTime));
+                        }
+
+                    }
+
+                }
+                return rows;
+            }
+
         }
     }
-}
 
 
     // Documentation: structure of Data so that we can easily use it in functions without passing multiple data
